@@ -14,35 +14,27 @@ import nltk
 random_seed = 200
 
 def drop_word_length(df, drop_pct, length):
-    # Get the indices of rows with word length 2 and label 0
+
     indices_with_word_length_2 = df.index[(df['sentence_lengths'] == length) & (df['main_therapist_behaviour'] == 0)].tolist()
     
-    # Calculate the number of rows to drop based on the drop percentage
     drop_count = int(len(indices_with_word_length_2) * drop_pct)
     
-    # Randomly select rows to drop
     indices_to_drop = np.random.choice(indices_with_word_length_2, drop_count, replace=False).tolist()
     
-    # Filter the DataFrame to only keep the rows that were not dropped
     df_filtered = df.loc[~df.index.isin(indices_to_drop)].reset_index(drop=True)
     
     return df_filtered
 
 def equalize_category_counts(df, col_name):
-    # Count the number of occurrences of each category
+
     category_counts = df[col_name].value_counts()
 
-    # Find the minimum count across all categories
     min_count = category_counts.min()
 
     if random_seed is not None:
         random.seed(random_seed)
 
-    #ACHTUNG ACHTUNG ACHtuNG
-    ##min_count =200
 
-
-    # Randomly drop rows from each category until the minimum count is reached
     indices_to_keep = []
     for category, count in category_counts.iteritems():
         indices = df.index[df[col_name] == category].tolist()
@@ -51,7 +43,6 @@ def equalize_category_counts(df, col_name):
         else:
             indices_to_keep.extend(indices)
 
-    # Filter the DataFrame to only keep the selected rows
     df_filtered = df.loc[indices_to_keep].reset_index(drop=True)
 
     return df_filtered
@@ -101,18 +92,7 @@ filter_sizes = [2, 3, 4]
 num_filters = [20, 50, 50]
 
 loss_fn = nn.CrossEntropyLoss()
-"""
-##TRANSFORMER
-model, optimizer = initialize_annomi_model(embeddings, modelType='transformer_model', vocab_size=len(word2idx),
-                                    embed_dim=300,
-                                    learning_rate=0.0001,
-                                    hidden_size=128,
-                                    dropout=0.5, 
-				                    num_classes=4)
 
-"""
-
-##CNN
 model, optimizer = initialize_annomi_model(embeddings, filter_sizes=filter_sizes, num_filters=num_filters, modelType='lstm_model', vocab_size=len(word2idx),
                                     embed_dim=300,
                                     learning_rate=0.001,

@@ -17,12 +17,11 @@ def initialize_model(embeddings, modelType,
                     num_classes=2,
                     dropout=0.5,
                     learning_rate=0.01):
-    """Instantiate a CNN model and an optimizer."""
-
+   
     assert (len(filter_sizes) == len(num_filters)), "filter_sizes and \
     num_filters need to be of the same length."
 
-    # Instantiate CNN model
+   
     if modelType == 'cnn_model':
         model = CNN_Text(pretrained_embedding=embeddings,
                             freeze_embedding=freeze_embedding,
@@ -59,12 +58,11 @@ def initialize_model(embeddings, modelType,
                                       num_classes=num_classes)
         optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
-    # Send model to `device` (GPU/CPU)
+
     else:
         NameError("MODEL WRONGLY ASSIGNED")
     model.to(device)
 
-    # Instantiate Adadelta optimizer
     
 
     return model, optimizer
@@ -79,12 +77,12 @@ def initialize_annomi_model(embeddings, modelType,
                     num_classes=2,
                     dropout=0.5,
                     learning_rate=0.01):
-    """Instantiate a CNN model and an optimizer."""
+   
 
     assert (len(filter_sizes) == len(num_filters)), "filter_sizes and \
     num_filters need to be of the same length."
 
-    # Instantiate CNN model
+   
     if modelType == 'cnn_model':
         model = CNN_Text(pretrained_embedding=embeddings,
                             freeze_embedding=freeze_embedding,
@@ -97,12 +95,7 @@ def initialize_annomi_model(embeddings, modelType,
        
         optimizer = optim.Adam(model.parameters(), lr = learning_rate)
 
-        """
-        
-        optimizer = optim.Adadelta(model.parameters(),
-                               lr=learning_rate,
-                               rho=0.95)
-        """
+  
     elif modelType == 'ffn_model':
         model = FFN_Text(pretrained_embedding =embeddings,
                             freeze_embedding=False,
@@ -124,10 +117,8 @@ def initialize_annomi_model(embeddings, modelType,
                                       num_classes=num_classes, dropout=dropout)
         optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
-    # Send model to `device` (GPU/CPU)
     model.to(device)
 
-    # Instantiate Adadelta optimizer
     
 
     return model, optimizer
